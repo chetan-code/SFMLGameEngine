@@ -1,0 +1,56 @@
+﻿  Main.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xmemory(673): error C2259: 'sf::Drawable': cannot instantiate abstract class
+C:\libraries\SFML-2.6.0\include\SFML\Graphics\RenderTarget.hpp(45,7): message : see declaration of 'sf::Drawable'
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xmemory(673): message : due to following members:
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xmemory(673): message : 'void sf::Drawable::draw(sf::RenderTarget &,sf::RenderStates) const': is abstract
+C:\libraries\SFML-2.6.0\include\SFML\Graphics\Drawable.hpp(69,18): message : see declaration of 'sf::Drawable::draw'
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(852): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,const _Ty&>(_Alloc &,_Objty *const ,const _Ty &)' being compiled
+          with
+          [
+              _Alloc=std::allocator<sf::Drawable>,
+              _Ty=sf::Drawable,
+              _Objty=sf::Drawable
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(863,36): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,const _Ty&>(_Alloc &,_Objty *const ,const _Ty &)' being compiled
+          with
+          [
+              _Alloc=std::allocator<sf::Drawable>,
+              _Ty=sf::Drawable,
+              _Objty=sf::Drawable
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(839): message : see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<const _Ty&>(const _Ty &)' being compiled
+          with
+          [
+              _Ty=sf::Drawable
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(845,13): message : see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<const _Ty&>(const _Ty &)' being compiled
+          with
+          [
+              _Ty=sf::Drawable
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(936,1): message : see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_one_at_back<const _Ty&>(const _Ty &)' being compiled
+          with
+          [
+              _Ty=sf::Drawable
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(936,29): message : see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_one_at_back<const _Ty&>(const _Ty &)' being compiled
+          with
+          [
+              _Ty=sf::Drawable
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(935,1): message : while compiling class template member function 'void std::vector<sf::Drawable,std::allocator<sf::Drawable>>::push_back(const _Ty &)'
+          with
+          [
+              _Ty=sf::Drawable
+          ]
+F:\Learning\CPP\SFMLGame\Main.cpp(56,24): message : see reference to function template instantiation 'void std::vector<sf::Drawable,std::allocator<sf::Drawable>>::push_back(const _Ty &)' being compiled
+          with
+          [
+              _Ty=sf::Drawable
+          ]
+F:\Learning\CPP\SFMLGame\Main.cpp(19,31): message : see reference to class template instantiation 'std::vector<sf::Drawable,std::allocator<sf::Drawable>>' being compiled
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xmemory(680,47): error C2259: 'sf::Drawable': cannot instantiate abstract class
+C:\libraries\SFML-2.6.0\include\SFML\Graphics\RenderTarget.hpp(45,7): message : see declaration of 'sf::Drawable'
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xmemory(680,47): message : due to following members:
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xmemory(680,47): message : 'void sf::Drawable::draw(sf::RenderTarget &,sf::RenderStates) const': is abstract
+C:\libraries\SFML-2.6.0\include\SFML\Graphics\Drawable.hpp(69,18): message : see declaration of 'sf::Drawable::draw'
