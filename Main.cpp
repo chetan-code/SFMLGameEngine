@@ -1,6 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
+#include "Vec2.h"
+#include "Game.h"
+
+
 
 
 sf::Vector2f getCenter(unsigned int screenWidth ,unsigned int screenHeight, sf::Vector2f size) {
@@ -9,68 +13,78 @@ sf::Vector2f getCenter(unsigned int screenWidth ,unsigned int screenHeight, sf::
     return sf::Vector2f(centerX, centerY);
 }
 
-class Vec2 {
-public :
-    //public variables dont need hungarian nottation like m_
-    float x = 0;
-    float y = 0;
-    //default constructor
-    Vec2() {}
-    //using intializer list to intialize vars
-    Vec2(float xin, float yin) : x(xin), y(yin) {}
-    //operator ovverloading
-    Vec2 operator + (const Vec2& rhs) const {
-        return Vec2(x + rhs.x, y + rhs.y);
-    }
-
-    void operator += (const Vec2& rhs) {
-        x += rhs.x;
-        y += rhs.y;
-    }
-    //chaining - allows use to perform same operation one after other
-    //we return a reference of result value
-    Vec2& add(const Vec2& v) {
-        x += v.x;
-        y += v.y;
-        return *this;
-    }
-
-    Vec2& scale(float s) {
-        x *= s;
-        y *= s;
-        return *this;
-    }
-
-    Vec2 rotate(float deg) {
-        //rotation magic
-        return *this;
-    }
-
-    float dist(const Vec2 v) const {
-        //distance = squareroot(deltax * deltax + deltay*deltay);
-        return sqrtf((v.x - x) * (v.x - x) + (v.y - y) * (v.y - y));
-    }
-};
+//class Vec2 {
+//public :
+//    //public variables dont need hungarian nottation like m_
+//    float x = 0;
+//    float y = 0;
+//    //default constructor
+//    Vec2() {}
+//    //using intializer list to intialize vars
+//    Vec2(float xin, float yin) : x(xin), y(yin) {}
+//    //operator ovverloading
+//    Vec2 operator + (const Vec2& rhs) const {
+//        return Vec2(x + rhs.x, y + rhs.y);
+//    }
+//
+//    void operator += (const Vec2& rhs) {
+//        x += rhs.x;
+//        y += rhs.y;
+//    }
+//    //chaining - allows use to perform same operation one after other
+//    //we return a reference of result value
+//    Vec2& add(const Vec2& v) {
+//        x += v.x;
+//        y += v.y;
+//        return *this;
+//    }
+//
+//    Vec2& scale(float s) {
+//        x *= s;
+//        y *= s;
+//        return *this;
+//    }
+//
+//    Vec2 rotate(float deg) {
+//        //rotation magic
+//        return *this;
+//    }
+//
+//    float dist(const Vec2 v) const {
+//        //distance = squareroot(deltax * deltax + deltay*deltay);
+//        return sqrtf((v.x - x) * (v.x - x) + (v.y - y) * (v.y - y));
+//    }
+//};
 
 
 
 
 int main(int args, char* argv[])
 {
-    Vec2 v1(100, 100);
-    Vec2 v2(2, 2);
-    Vec2 v3 = v1 + v2;
-    //v1.add(v2);
-    //v1 += v2;
-    v1.add(v2).add(v3);//chaining
-    //scaler value from vec2 -  
-    float dist = v1.dist(v2);
-    //we can do chaining like
-    v2.scale(2).rotate(10).add(v3);
-    std::cout << v3.x << " " << v3.y << std::endl;
-    return 0;
+    Game g("config.txt");
+    g.run();
 }
 
+
+void Vec2Test() {
+    Vec2 v1(4, 5);
+    Vec2 v2(2, 3);
+    Vec2 sum = v1 + v2;
+    Vec2 minus = v1 - v2;
+    Vec2 multiply = v1 * 2;
+    Vec2 divide = v1 / 2;
+    bool equals = v1 == v2;
+    bool unequal = v1 != v2;
+    Vec2 normalized = v1.normalize();
+
+    sum.print();
+    minus.print();
+    multiply.print();
+    divide.print();
+    std::cout << equals << std::endl;
+    std::cout << unequal << std::endl;
+    normalized.print();
+}
 
 void SfmlTest() {
     //std::vector<sf::Drawable> drawables;
