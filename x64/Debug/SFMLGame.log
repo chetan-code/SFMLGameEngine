@@ -1,2 +1,5 @@
-﻿  main.cpp
+﻿  Game.cpp
+  Vec2.cpp
+  main.cpp
+  Generating Code...
   SFMLGame.vcxproj -> F:\Learning\CPP\SFMLGame\x64\Debug\SFMLGame.exe

@@ -140,7 +140,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bin.cpp" />
+    <ClCompile Include="Components.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Vec2.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Components.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Vec2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
