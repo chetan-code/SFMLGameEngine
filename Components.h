@@ -6,15 +6,17 @@ class CTransform
 {
 public:
 	Vec2 pos = { 0.0, 0.0 };
-	Vec2 velocity = { 0.0, 0.0 };
+	Vec2 velocity = { 0.0f, 0.0f };
 	float angle = 0;
 
 	CTransform(const Vec2& p, const Vec2& v, float a) :
-		pos(p), velocity(v), angle(a) {};
+		pos(p), velocity(v), angle(a) {}
 
 };
 
 class CShape {
+
+public:
 	sf::CircleShape circle;
 
 	CShape(float radius, int point, const sf::Color fill, 
@@ -50,11 +52,11 @@ public:
 
 class CInput {
 public:
-	bool up;
-	bool down;
-	bool left;
-	bool right;
-	bool shoot;
+	bool up = false;
+	bool down = false;
+	bool left = false;
+	bool right = false;
+	bool shoot = false;
 
-	CInput() {}
+	CInput(){}
 };

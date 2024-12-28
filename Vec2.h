@@ -22,7 +22,6 @@ public:
 	Vec2 operator /= (const float value);
 
 	float dist(const Vec2 rhs) const;
-	float length() const;
-	void normalize();
+	Vec2 normalize();
 };
 

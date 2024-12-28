@@ -1,5 +1,35 @@
 ﻿  Game.cpp
-  Vec2.cpp
-  main.cpp
-  Generating Code...
+F:\Learning\CPP\SFMLGame\Game.cpp(65,14): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+F:\Learning\CPP\SFMLGame\Game.cpp(66,14): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+F:\Learning\CPP\SFMLGame\Game.cpp(199,69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\Learning\CPP\SFMLGame\Game.cpp(199,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xutility(275,77): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\memory(1983): message : see reference to function template instantiation 'void std::_Construct_in_place<_Ty,int,int,sf::Color,sf::Color,int>(_Ty &,int &&,int &&,sf::Color &&,sf::Color &&,int &&) noexcept(false)' being compiled
+          with
+          [
+              _Ty=CShape
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\memory(2663): message : see reference to function template instantiation 'std::_Ref_count_obj2<CShape>::_Ref_count_obj2<_Ty,_Ty,sf::Color,sf::Color,_Ty>(_Ty &&,_Ty &&,sf::Color &&,sf::Color &&,_Ty &&)' being compiled
+          with
+          [
+              _Ty=int
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\memory(2664,20): message : see reference to function template instantiation 'std::_Ref_count_obj2<CShape>::_Ref_count_obj2<_Ty,_Ty,sf::Color,sf::Color,_Ty>(_Ty &&,_Ty &&,sf::Color &&,sf::Color &&,_Ty &&)' being compiled
+          with
+          [
+              _Ty=int
+          ]
+F:\Learning\CPP\SFMLGame\Game.cpp(70,95): message : see reference to function template instantiation 'std::shared_ptr<CShape> std::make_shared<CShape,int,int,sf::Color,sf::Color,int>(int &&,int &&,sf::Color &&,sf::Color &&,int &&)' being compiled
   SFMLGame.vcxproj -> F:\Learning\CPP\SFMLGame\x64\Debug\SFMLGame.exe

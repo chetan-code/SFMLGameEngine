@@ -1,22 +1,36 @@
 #include "EntityManager.h"
+#include <iostream>
+#include <algorithm>
 
 void EntityManager::removeDeadEntities(EntityVec& vec)
 {
-	//called by update - remove all dead entites - not active set to false
+	// Remove all even numbers from vector v
+	auto ne = remove_if(vec.begin(), vec.end(),
+		[](std::shared_ptr<Entity> e) {
+			return !e->isActive();
+		});
+	vec.erase(ne, vec.end());
+	
+}
+
+EntityManager::EntityManager()
+{
 }
 
 void EntityManager::update()
 {
-	//add/remove entities
+	for (auto& e : m_entitiesToAdd) {
+		m_entities.push_back(e);
+		m_entityMap[e->m_tag].push_back(e);
+	}
 
-	//clear added entities from m_entities to add
-
-	// remove dead entities
+	m_entitiesToAdd.clear();
 
 	//remove dead entities from map
 	for (auto& [tag, entityVec] : m_entityMap) {
 		removeDeadEntities(entityVec);
 	}
+	removeDeadEntities(m_entities);
 }
 
 std::shared_ptr<Entity> EntityManager::addEntity(const std::string& tag)
@@ -26,4 +40,14 @@ std::shared_ptr<Entity> EntityManager::addEntity(const std::string& tag)
 	m_entitiesToAdd.push_back(e);
 
 	return e;
+}
+
+const EntityVec& EntityManager::getEntities()
+{
+	return m_entities;
+}
+
+const EntityVec& EntityManager::getEntities(const std::string& tag)
+{
+	return m_entityMap[tag];
 }
