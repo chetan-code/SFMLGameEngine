@@ -9,8 +9,17 @@ void Game::init(const std::string& config)
 {
 	//read config file
 	//use premade PlayerConfig
-	m_window.create(sf::VideoMode(1280, 720), "Assignment 2");
+	m_window.create(sf::VideoMode(1280, 720), "Geometry Wars");
 	m_window.setFramerateLimit(60);
+	//reed font values from config as well
+	m_font.loadFromFile("fonts/opensans.ttf");
+	m_scoreText.setPosition(10,10);
+	m_scoreText.setFont(m_font);
+	m_scoreText.setFillColor(sf::Color::White);
+	//game over text
+	m_gameOverText.setPosition(640, 360);
+	m_gameOverText.setFont(m_font);
+	m_gameOverText.setFillColor(sf::Color::White);
 
 	spawnPlayer();
 }
@@ -25,15 +34,18 @@ void Game::run()
 	//run game main loop here
 	while (m_running) {
 		m_entities.update();
-
+		sUserInput();
+		sRender();
 		//TODO - pause function
-
+		if (m_gameOver || m_paused) {
+			continue;
+		}
 		sEnemySpawner();
 		sMovement();
 		sCollision();
 		sLifespan();
-		sUserInput();
-		sRender();
+
+	
 
 		//increse the current frame
 		//may need to move when pause implement
@@ -74,6 +86,20 @@ void Game::spawnEnemy()
 	m_lastEnemySpawnTime = m_currentFrame;
 }
 
+void Game::restartGame() {
+	if (!m_gameOver) { return; }
+	//clear all entities
+	for (auto& e : m_entities.getEntities()) {
+		e->destroy();
+	}
+	//resetting data 
+	m_score = 0;
+	m_life = 3;
+	spawnPlayer();
+	m_gameOver = false;
+	m_paused = false;//in case he paused by mistake
+}
+
 void Game::spawnSmallEnemies(std::shared_ptr<Entity> entity)
 {
 	//spawn smaller enemies
@@ -83,8 +109,8 @@ void Game::spawnBullet(std::shared_ptr<Entity> entity, const Vec2& mousePos)
 {
 	//param entity - is the one that spawns its
 	auto bullet = m_entities.addEntity("bullet");
-	float bulletgSpeed = 5; //TODO - read from config
-	Vec2 bulletVelocity = (mousePos - entity->cTransform->pos).normalize() * bulletgSpeed;
+	float bulletSpeed = 15; //TODO - read from config
+	Vec2 bulletVelocity = (mousePos - entity->cTransform->pos).normalize() * bulletSpeed;
 	//add components to the bullet
 	bullet->cTransform = std::make_shared<CTransform>(entity->cTransform->pos, bulletVelocity, 0.0f);
 	bullet->cShape = std::make_shared<CShape>(10.0f, 32, sf::Color(255, 255, 255), sf::Color(10, 10, 10), 3.0f);
@@ -149,6 +175,28 @@ void Game::sUserInput()
 			m_running = false;
 		}
 
+		//major game related keys [UI]
+		if (event.type == sf::Event::KeyPressed) {
+			switch (event.key.code)
+			{
+			case sf::Keyboard::P:
+				m_paused = !m_paused;
+				std::cout << "Game Paused :" << m_paused << std::endl;
+				break;
+			case sf::Keyboard::R:
+				restartGame();
+				break;
+			default:
+				break;
+			}
+		}
+
+
+		if (m_paused || m_gameOver) {
+			continue;
+		}
+
+		//player mechanics related keys
 		//key pressed 
 		if (event.type == sf::Event::KeyPressed) {
 			switch (event.key.code)
@@ -228,6 +276,7 @@ void Game::sLifespan()
 void Game::sRender() {
 	m_window.clear();
 	
+	//draw all entities
 	for (auto& e : m_entities.getEntities())
 	{
 		
@@ -237,8 +286,14 @@ void Game::sRender() {
 		e->cShape->circle.setRotation(e->cTransform->angle);
 		//draw shape
 		m_window.draw(e->cShape->circle);
-	}
 
+	}
+	//draw score
+	m_scoreText.setString("Score : " + std::to_string(m_score) + " Life: " + std::to_string(m_life));
+	m_gameOverText.setString(m_gameOver ? "GAME OVER [R] to restart" : "");
+	m_window.draw(m_gameOverText);
+	m_window.draw(m_scoreText);
+	
 	m_window.display();
 }
 
@@ -263,14 +318,39 @@ void Game::sCollision()
 				return;//no more collision logic
 			}
 
-			//everthing worked as expected
+			//collision of bullet and enemy
 			if (bullet->cTransform->pos.dist(enemy->cTransform->pos) < (bullet->cCollision->radius + enemy->cCollision->radius)) {
 				bullet->destroy();
 				enemy->destroy();
 				std::cout << "destroy()" << std::endl;
-				//TODO : increase score
+				//increase score
+				m_score++;
+				std::cout << "Score:" << m_score << std::endl;
 			}
 		}
 	}
+
+	//check for collision between enemy and player
+	for (auto& enemy : m_entities.getEntities("enemy")) {
+		//component can be null - and can return null ptr - add check
+		if (!enemy->cCollision) {
+			//shared_ptr return false if value is not assigned
+			std::cout << "enemy has no collider" << std::endl;
+			return;//no more collision logic
+		}
+
+		//std::cout << "distance between player and enemy is : " << enemy->cTransform->pos.dist(m_player->cTransform->pos) << std::endl;
+		//Check if collided with player
+		if (enemy->cTransform->pos.dist(m_player->cTransform->pos) < (enemy->cCollision->radius + m_player->cCollision->radius)) {
+			enemy->destroy();
+			m_life--;
+			std::cout << "enemy strike player" << std::endl;
+			if (m_life <= 0) {
+				//game over
+				m_gameOver = true;
+			}
+		}
+	}
+
 }
 

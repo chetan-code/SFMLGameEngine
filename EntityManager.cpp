@@ -9,8 +9,7 @@ void EntityManager::removeDeadEntities(EntityVec& vec)
 		[](std::shared_ptr<Entity> e) {
 			return !e->isActive();
 		});
-	vec.erase(ne, vec.end());
-	
+	vec.erase(ne, vec.end());	
 }
 
 EntityManager::EntityManager()

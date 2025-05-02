@@ -14,16 +14,18 @@ class Game
 	sf::RenderWindow m_window;
 	EntityManager m_entities;
 	sf::Font m_font;
-	sf::Text m_text;
+	sf::Text m_scoreText;
+	sf::Text m_gameOverText;
 	PlayerConfig m_playerConfig;
 	EnemyConfig m_enemyConfig;
 	BulletConfig m_bulletConfig;
 	int m_score = 0;
+	int m_life = 3;
 	int m_currentFrame = 0;
 	int m_lastEnemySpawnTime = 0;
 	bool m_paused = false;//whether we upate game logic
 	bool m_running = true;//whether the game is running
-
+	bool m_gameOver = false;
 	std::shared_ptr<Entity> m_player;
 
 	void init(const std::string& config);//init the GameState with a config file path
@@ -37,6 +39,7 @@ class Game
 	void sEnemySpawner();
 	void sCollision();
 
+	void restartGame();
 	void spawnPlayer();
 	void spawnEnemy();
 	void spawnSmallEnemies(std::shared_ptr<Entity> entity);
