@@ -12,6 +12,7 @@ private:
 	std::string m_levelPath;
 	std::shared_ptr<Entity> m_player;
 	PlayerConfig m_playerConfig;
+	bool m_isGrounded = false;
 public :
 	Scene_Play(GameEngine* engine, const std::string& levelPath);
 	virtual void update() override;
@@ -23,6 +24,7 @@ public :
 	virtual void simulate(int frame) override;
 	//scene specific systems
 	void HandleInput(const Vec2& axis);
+	void Jump(bool start);
 	void sMovement();
 };
 

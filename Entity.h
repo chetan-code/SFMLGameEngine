@@ -32,7 +32,7 @@ class Entity
 	Entity(const size_t id, const std::string& tag);
 
 //private:
-
+	//old approach
 	//components
 	//std::shared_ptr<CTransform> cTransform;
 	//std::shared_ptr<CShape> cShape;

@@ -12,11 +12,13 @@ void GameEngine::init()
 {
 	std::cout << "Started Engine" << std::endl;
 	//load window
-	m_window.create(sf::VideoMode(1280, 720), "Game Window");
+	m_window.create(sf::VideoMode(480, 360), "Game Window");
 	m_window.setFramerateLimit(60);
 	//load game assets here
 	m_assets = Assets();
-	m_assets.addTexture("player", "sprites/tilemap_characters.png");\
+	m_assets.addTexture("player", "sprites/tilemap_characters.png");
+	m_assets.addTexture("environment", "sprites/tilemap_environment.png");
+	m_assets.addTexture("bg", "sprites/tilemap_backgrounds.png");
 	//set default current scene
 	changeScene("play", std::make_shared<Scene_Play>(this, "levelpath.text"));
 
