@@ -23,6 +23,7 @@ public:
 	Vec2 operator *= (const float value);
 	Vec2 operator /= (const float value);
 
+	float magnitude() const;
 	float dist(const Vec2 rhs) const;
 	Vec2 normalize();
 };

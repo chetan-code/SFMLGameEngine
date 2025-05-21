@@ -12,7 +12,7 @@ void GameEngine::init()
 {
 	std::cout << "Started Engine" << std::endl;
 	//load window
-	m_window.create(sf::VideoMode(480, 360), "Game Window");
+	m_window.create(sf::VideoMode(1280, 720), "Game Window");
 	m_window.setFramerateLimit(60);
 	//load game assets here
 	m_assets = Assets();
@@ -51,8 +51,12 @@ void GameEngine::changeScene(const std::string& name,std::shared_ptr<Scene> scen
 
 Assets& GameEngine::getAssets()
 {
-	// TODO: insert return statement here
 	return m_assets;
+}
+
+Physics& GameEngine::getPhysics()
+{
+	return m_physics;
 }
 
 sf::RenderWindow& GameEngine::getWindow()
@@ -85,6 +89,23 @@ void GameEngine::sUserInput()
 			
 			//look up the action and send the action to the scene
 			currentScene()->sDoAction(Action(currentScene()->getActionMap().at(event.key.code), actionType));
+		}
+
+		if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
+			//adding extra offset for mouse
+			int keycode = event.mouseButton.button + 1000;
+			//if the current scene does not have an action associated with the key , skip the event
+			//.find(...) looks for this key in the map.
+			//If found, it returns an iterator pointing to the key - value pair.
+			//If not found, it returns actionMap.end().
+			if (currentScene()->getActionMap().find(keycode) == currentScene()->getActionMap().end()) {
+				continue;
+			}
+
+			const std::string actionType = (event.type == sf::Event::MouseButtonPressed) ? "START" : "END";
+
+			//look up the action and send the action to the scene
+			currentScene()->sDoAction(Action(currentScene()->getActionMap().at(keycode), actionType));
 		}
 
 

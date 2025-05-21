@@ -26,5 +26,9 @@ public :
 	void HandleInput(const Vec2& axis);
 	void Jump(bool start);
 	void sMovement();
+	void sCollision();
+	void spawnPlayer();
+	void playerReset();
+	void spawnRandom();
 };
 

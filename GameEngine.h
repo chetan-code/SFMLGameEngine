@@ -5,6 +5,7 @@
 #include <map>
 #include <sfml/Graphics.hpp>
 #include "Assets.h"
+#include "Physics.h"
 class Scene;
 
 class GameEngine
@@ -20,6 +21,7 @@ private:
 	Assets m_assets;
 	std::string m_currentScene;
 	bool m_running = true;
+	Physics m_physics;
 
 public:
 	GameEngine(const std::string& configPath);
@@ -29,6 +31,7 @@ public:
 	std::shared_ptr<Scene> currentScene();
 	void changeScene(const std::string& name,std::shared_ptr<Scene> scene);
 	Assets& getAssets();
+	Physics& getPhysics();
 	sf::RenderWindow& getWindow();
 	void sUserInput();
 };
