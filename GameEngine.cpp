@@ -16,9 +16,9 @@ void GameEngine::init()
 	m_window.setFramerateLimit(60);
 	//load game assets here
 	m_assets = Assets();
-	m_assets.addTexture("player", "sprites/tilemap_characters.png");
-	m_assets.addTexture("environment", "sprites/tilemap_environment.png");
-	m_assets.addTexture("bg", "sprites/tilemap_backgrounds.png");
+	m_assets.addTexture("player", "sprites/character.png");
+	m_assets.addTexture("environment", "sprites/environment.png");
+	//m_assets.addTexture("bg", "sprites/tilemap_backgrounds.png");
 	//set default current scene
 	changeScene("play", std::make_shared<Scene_Play>(this, "levelpath.text"));
 

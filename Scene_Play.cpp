@@ -2,6 +2,7 @@
 #include <iostream>
 #include "sfml/Graphics.hpp"
 #include "Physics.h"
+#define PIXEL_SIZE 64
 
 Scene_Play::Scene_Play(GameEngine* engine, const std::string& levelPath) :
 	Scene(engine),
@@ -38,24 +39,32 @@ void Scene_Play::init(const std::string & levelPath)
 	//enironment layer - test
 	for (int i = 0; i < 5; i++) {
 		auto e = m_entities.addEntity("tile");
-		e->addComponent<CTransform>(Vec2(i * 18 * 3, 204), Vec2(0, 0), 0);
-		e->addComponent<CBoundingBox>(Vec2(54, 18));
-		e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(18, 0, 54, 18));
+		e->addComponent<CTransform>(Vec2(i * PIXEL_SIZE, 400), Vec2(0, 0), 0);
+		e->addComponent<CBoundingBox>(Vec2(PIXEL_SIZE, PIXEL_SIZE));
+		e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(PIXEL_SIZE, 0, PIXEL_SIZE, PIXEL_SIZE));
 	}
 	//enironment layer2 - test
 	for (int i = 0; i < 5; i++) {
 		auto e = m_entities.addEntity("tile");
-		e->addComponent<CTransform>(Vec2((5 * 54) + i * 18 * 3, 224), Vec2(0, 0), 0);
-		e->addComponent<CBoundingBox>(Vec2(54, 18));
-		e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(18, 0, 54, 18));
+		e->addComponent<CTransform>(Vec2((5 * PIXEL_SIZE) + i * PIXEL_SIZE, 450), Vec2(0, 0), 0);
+		e->addComponent<CBoundingBox>(Vec2(PIXEL_SIZE, PIXEL_SIZE));
+		e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(PIXEL_SIZE, 0, PIXEL_SIZE, PIXEL_SIZE));
+	}
+
+	//enironment layer top - test
+	for (int i = 0; i < 5; i++) {
+		auto e = m_entities.addEntity("tile");
+		e->addComponent<CTransform>(Vec2((7 * PIXEL_SIZE) + i * PIXEL_SIZE, 250), Vec2(0, 0), 0);
+		e->addComponent<CBoundingBox>(Vec2(PIXEL_SIZE, PIXEL_SIZE));
+		e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(PIXEL_SIZE, 0, PIXEL_SIZE, PIXEL_SIZE));
 	}
 
 	//enironment layer3 - test
 	for (int i = 0; i < 5; i++) {
 		auto e = m_entities.addEntity("tile");
-		e->addComponent<CTransform>(Vec2((11 * 54) + i * 18 * 3, (i % 2 == 0) ? 204 : 224), Vec2(0, 0), 0);
-		e->addComponent<CBoundingBox>(Vec2(54, 18));
-		e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(18, 0, 54, 18));
+		e->addComponent<CTransform>(Vec2((11 * PIXEL_SIZE) + i * PIXEL_SIZE , (i % 2 == 0) ? 450 : 400), Vec2(0, 0), 0);
+		e->addComponent<CBoundingBox>(Vec2(PIXEL_SIZE, PIXEL_SIZE));
+		e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(PIXEL_SIZE, 0, PIXEL_SIZE, PIXEL_SIZE));
 	}
 
 
@@ -75,11 +84,11 @@ void Scene_Play::sDoAction(const Action& action)
 	if (action.getType() == "START") {
 		if (action.getName() == "RIGHT") {
 			//std::cout << "RIGHT ACTION START" << std::endl;
-			HandleInput(Vec2(2, 0));
+			HandleInput(Vec2(4, 0));
 		}
 
 		if (action.getName() == "LEFT") {
-			HandleInput(Vec2(-2, 0));
+			HandleInput(Vec2(-4, 0));
 		}
 
 		if (action.getName() == "JUMP") {
@@ -117,8 +126,9 @@ void Scene_Play::sRender()
 	for (auto& e : m_entities.getEntities())
 	{
 		if (e->getComponent<CTransform>().has || e->getComponent<CSprite>().has) {
-			Vec2 pos = e->getComponent<CTransform>().pos;
-			e->getComponent<CSprite>().sprite.setPosition(pos.x, pos.y);
+			CTransform& t = e->getComponent<CTransform>();
+			e->getComponent<CSprite>().sprite.setPosition(t.pos.x, t.pos.y);
+			e->getComponent<CSprite>().sprite.setScale(t.scale.x, t.scale.y);
 			gameEngine->getWindow().draw(e->getComponent<CSprite>().sprite);
 		}
 	}			
@@ -144,7 +154,7 @@ void Scene_Play::Jump(bool start)
 {
 	if (start && m_player->getComponent<CTransform>().velocity.y == 0) {
 		//todo : check if grounded
-		m_player->getComponent<CTransform>().velocity.y = -15;
+		m_player->getComponent<CTransform>().velocity.y = -20;
 		m_isGrounded = false;
 		std::cout << "JUMP START" << std::endl;
 
@@ -164,7 +174,8 @@ void Scene_Play::sMovement()
 			Vec2 finalVelocity = transform.velocity;
 			if (e->hasComponent<CInput>()) {
 				//movement with input
-				finalVelocity.x = e->getComponent<CInput>().axis.x;		
+				finalVelocity.x = e->getComponent<CInput>().axis.x;	
+				if(finalVelocity.x != 0)transform.scale.x = std::copysign(1, finalVelocity.x); 
 			}
 
 			//apply gavity
@@ -175,7 +186,7 @@ void Scene_Play::sMovement()
 
 
 			//ground check - will be replaced by collider logic
-			float groundY = gameEngine->getWindow().getSize().y - 24;
+			float groundY = gameEngine->getWindow().getSize().y - 96;
 			if (transform.pos.y >= groundY) {
 				transform.pos.y = groundY;
 				finalVelocity.y = 0;
@@ -185,6 +196,7 @@ void Scene_Play::sMovement()
 				m_isGrounded = false;
 			}
 			//apply velocity
+			transform.prevPos = transform.pos;//cache prev pos
 			transform.pos += finalVelocity;
 			transform.velocity = finalVelocity;
 		}
@@ -201,12 +213,32 @@ void Scene_Play::sCollision()
 			auto& b = m_entities.getEntities()[j];
 			if (a != b && a->hasComponent<CBoundingBox>() && b->hasComponent<CBoundingBox>()) {
 				Vec2 overlap = gameEngine->getPhysics().GetOverlap(a, b);
-				//vertical overlap
-				if (overlap.y > 0 && overlap.x > 0){
-					if(a->getComponent<CTransform>().velocity.y != 0) {
+				Vec2 prevOverlap = gameEngine->getPhysics().GetPreviousOverlap(a,b);
+				//vertical collision
+				if (prevOverlap.x > prevOverlap.y && overlap.y > 0 && overlap.x > 0){
+					//top to bottom
+					if(a->getComponent<CTransform>().velocity.y > 0) {
 						a->getComponent<CTransform>().pos.y -= overlap.y;
+						a->getComponent<CTransform>().velocity.y = 0;	
+					}
+					//bottom to top
+					if (a->getComponent<CTransform>().velocity.y < 0) {
+						a->getComponent<CTransform>().pos.y += overlap.y;
 						a->getComponent<CTransform>().velocity.y = 0;
-						//std::cout << "Overlap = " << overlap.x << ":" << overlap.y << std::endl;
+					}
+				}
+				//horizontal collision
+				if (prevOverlap.y > prevOverlap.x  && overlap.x > 0 && overlap.y > 0) {
+					//left to right
+					if (a->getComponent<CTransform>().velocity.x >  0) {
+						a->getComponent<CTransform>().pos.x -= overlap.x;
+						a->getComponent<CTransform>().velocity.x = 0;
+
+					}
+					//right to left
+					if (a->getComponent<CTransform>().velocity.x < 0) {
+						a->getComponent<CTransform>().pos.x += overlap.x;
+						a->getComponent<CTransform>().velocity.x = 0;
 					}
 				}
 			}
@@ -222,8 +254,8 @@ void Scene_Play::spawnPlayer()
 	m_player->addComponent<CInput>();
 	m_player->addComponent<CGravity>(1.0f);
 	m_player->addComponent<CTransform>(Vec2(20, 20), Vec2(1, 0), 0);
-	m_player->addComponent<CBoundingBox>(Vec2(24, 24));
-	m_player->addComponent<CSprite>(gameEngine->getAssets().getTexture("player"), sf::IntRect(0, 0, 24, 24));
+	m_player->addComponent<CBoundingBox>(Vec2(48, 96));
+	m_player->addComponent<CSprite>(gameEngine->getAssets().getTexture("player"), sf::IntRect(0, 0, 96, 96));
 }
 
 void Scene_Play::spawnRandom() {
@@ -232,11 +264,14 @@ void Scene_Play::spawnRandom() {
 	auto e = m_entities.addEntity("random");
 	e->addComponent<CGravity>(1.0f);
 	e->addComponent<CTransform>(Vec2(worldPos.x, worldPos.y), Vec2(0, 0), 0);
-	e->addComponent<CBoundingBox>(Vec2(18, 18));
-	e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(9*18, 0, 18, 18));
+	e->addComponent<CBoundingBox>(Vec2(PIXEL_SIZE, PIXEL_SIZE));
+	e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(7 * PIXEL_SIZE, 0, PIXEL_SIZE, PIXEL_SIZE));
 }
 
 void Scene_Play::playerReset()
 {
 	m_player->getComponent<CTransform>().pos = Vec2(20, 20);
+	for (auto& e : m_entities.getEntities("random")) {
+		e->destroy();
+	}
 }

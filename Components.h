@@ -14,6 +14,7 @@ public:
 	Vec2 pos = { 0.0, 0.0 };
 	Vec2 prevPos = { 0.0, 0.0 };
 	Vec2 velocity = { 0.0f, 0.0f };
+	Vec2 scale = { 1.0f, 1.0f };
 	float angle = 0;
 
 	CTransform() {}
@@ -42,7 +43,9 @@ public :
 	sf::Sprite sprite;
 	sf::IntRect rect;
 	CSprite() {}
-	CSprite(sf::Texture& t, sf::IntRect r) : sprite(t, r), rect(r){}
+	CSprite(sf::Texture& t, sf::IntRect r) : sprite(t, r), rect(r){
+		sprite.setOrigin(r.width/2, r.height/2);
+	}
 };
 
 class CCollision : public Component {
