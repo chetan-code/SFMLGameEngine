@@ -21,20 +21,6 @@ void Scene_Play::init(const std::string & levelPath)
 
 	m_entities = EntityManager();
 	std::cout << "Initializing play scene" << std::endl;
-	
-	//backgroundLayer - test
-	//for (int k = 0; k < 5; k++) {
-	//	for (int l = 0; l < 5; l++) {
-	//		for (int i = 0; i < 4; i++) {
-	//			for (int j = 0; j < 3; j++) {
-	//				auto e = m_entities.addEntity("bg");
-	//				e->addComponent<CTransform>(Vec2((k * 96) + (i * 24),(l* 72) + j * 24), Vec2(0, 0), 0);
-	//				e->addComponent<CSprite>(gameEngine->getAssets().getTexture("bg"), sf::IntRect(24 * i, 24 * j, 24, 24));
-	//			}
-	//		}
-	//	}
-	//}
-
 
 	//enironment layer - test
 	for (int i = 0; i < 5; i++) {
