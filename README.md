@@ -15,6 +15,10 @@ This engine provides a solid foundation for developing 2D games, featuring an en
 
 ---
 
+## ✨ Engine Architecture
+![Engine Architecture](info/EngineArchitecture.png)
+
+
 ## 🛠 Getting Started
 
 ### Prerequisites
