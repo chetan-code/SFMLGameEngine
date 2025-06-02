@@ -12,6 +12,7 @@ private:
 	std::string m_levelPath;
 	std::shared_ptr<Entity> m_player;
 	PlayerConfig m_playerConfig;
+	std::map<std::string,std::shared_ptr<Animation>> m_animationMap;//map of player state and animation
 	bool m_isGrounded = false;
 public :
 	Scene_Play(GameEngine* engine, const std::string& levelPath);
@@ -30,5 +31,6 @@ public :
 	void spawnPlayer();
 	void playerReset();
 	void spawnRandom();
+	void changeState(std::string newState);
 };
 

@@ -131,6 +131,15 @@ void Scene_Play::sRender()
 			e->getComponent<CSprite>().sprite.setScale(t.scale.x, t.scale.y);
 			gameEngine->getWindow().draw(e->getComponent<CSprite>().sprite);
 		}
+
+		if (e->getComponent<CTransform>().has || e->getComponent<CAnimation>().has) {
+			CTransform& t = e->getComponent<CTransform>();
+			e->getComponent<CAnimation>().currentAnimation.getSprite().setPosition(t.pos.x, t.pos.y);
+			e->getComponent<CAnimation>().currentAnimation.getSprite().setScale(t.scale.x, t.scale.y);
+			//TODO : need to be moved
+			e->getComponent<CAnimation>().currentAnimation.update();
+			gameEngine->getWindow().draw(e->getComponent<CAnimation>().currentAnimation.getSprite());
+		}
 	}			
 
 	gameEngine->getWindow().display();
@@ -156,8 +165,8 @@ void Scene_Play::Jump(bool start)
 		//todo : check if grounded
 		m_player->getComponent<CTransform>().velocity.y = -20;
 		m_isGrounded = false;
+		changeState("player_jump");
 		std::cout << "JUMP START" << std::endl;
-
 	}
 }
 
@@ -175,6 +184,9 @@ void Scene_Play::sMovement()
 			if (e->hasComponent<CInput>()) {
 				//movement with input
 				finalVelocity.x = e->getComponent<CInput>().axis.x;	
+				if (finalVelocity.x != 0 && finalVelocity.y == 0) {
+					changeState("player_walk");
+				}
 				if(finalVelocity.x != 0)transform.scale.x = std::copysign(1, finalVelocity.x); 
 			}
 
@@ -220,6 +232,11 @@ void Scene_Play::sCollision()
 					if(a->getComponent<CTransform>().velocity.y > 0) {
 						a->getComponent<CTransform>().pos.y -= overlap.y;
 						a->getComponent<CTransform>().velocity.y = 0;	
+						if (a == m_player && !m_isGrounded && a->getComponent<CTransform>().velocity.x == 0) { 
+							//change only when player was in air and not moving
+							changeState("player_idle"); 
+							m_isGrounded = true;
+						}
 					}
 					//bottom to top
 					if (a->getComponent<CTransform>().velocity.y < 0) {
@@ -254,8 +271,13 @@ void Scene_Play::spawnPlayer()
 	m_player->addComponent<CInput>();
 	m_player->addComponent<CGravity>(1.0f);
 	m_player->addComponent<CTransform>(Vec2(20, 20), Vec2(1, 0), 0);
-	m_player->addComponent<CBoundingBox>(Vec2(48, 96));
-	m_player->addComponent<CSprite>(gameEngine->getAssets().getTexture("player"), sf::IntRect(0, 0, 96, 96));
+	m_player->addComponent<CBoundingBox>(Vec2(48, 80));
+	m_player->addComponent<CState>("player_idle");
+	//player animation
+	m_animationMap["player_idle"] = std::make_shared<Animation>("player_idle", gameEngine->getAssets().getTexture("player_idle"), 1, 1, 20);
+	m_animationMap["player_walk"] = std::make_shared<Animation>("player_walk", gameEngine->getAssets().getTexture("player_walk"), 2, 1, 20);
+	m_animationMap["player_jump"] = std::make_shared<Animation>("player_jump", gameEngine->getAssets().getTexture("player_jump"), 1, 1, 20);
+	m_player->addComponent<CAnimation>(*m_animationMap["player_idle"]);
 }
 
 void Scene_Play::spawnRandom() {
@@ -266,6 +288,15 @@ void Scene_Play::spawnRandom() {
 	e->addComponent<CTransform>(Vec2(worldPos.x, worldPos.y), Vec2(0, 0), 0);
 	e->addComponent<CBoundingBox>(Vec2(PIXEL_SIZE, PIXEL_SIZE));
 	e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(7 * PIXEL_SIZE, 0, PIXEL_SIZE, PIXEL_SIZE));
+}
+
+void Scene_Play::changeState(std::string newState)
+{
+	if (m_player->getComponent<CState>().stateName != newState) {
+		m_player->getComponent<CState>().stateName = newState;
+		m_player->getComponent<CAnimation>().currentAnimation = *m_animationMap[newState];
+		std::cout << "New State : " << newState << std::endl;
+	}
 }
 
 void Scene_Play::playerReset()

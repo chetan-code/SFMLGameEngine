@@ -17,6 +17,9 @@ void GameEngine::init()
 	//load game assets here
 	m_assets = Assets();
 	m_assets.addTexture("player", "sprites/character.png");
+	m_assets.addTexture("player_idle", "sprites/character_idle.png");
+	m_assets.addTexture("player_walk", "sprites/character_walk.png");
+	m_assets.addTexture("player_jump", "sprites/character_jump.png");
 	m_assets.addTexture("environment", "sprites/environment.png");
 	//m_assets.addTexture("bg", "sprites/tilemap_backgrounds.png");
 	//set default current scene
