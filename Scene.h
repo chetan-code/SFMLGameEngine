@@ -2,6 +2,7 @@
 #include "EntityManager.h"
 #include "Action.h"
 #include "GameEngine.h";
+#include "Camera.h"
 class Scene
 {
 	//this is a abtract base class for all scenes
@@ -14,12 +15,14 @@ public :
 	
 	bool pause;
 	bool hasEnded;
+	CameraType m_cameraType;
 
 	Scene(GameEngine* eng) : gameEngine(eng) {}
 
 	virtual void update();
 	virtual void sDoAction(const Action& action);
 	virtual void sRender();
+	virtual void sCamera();
 	virtual void simulate(int frame);
 	void registerAction(int keyCode,const std::string& actionName);
 	const std::map<int, std::string>& getActionMap() const;

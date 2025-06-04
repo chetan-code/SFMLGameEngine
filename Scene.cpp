@@ -14,6 +14,10 @@ void Scene::sRender()
 {
 }
 
+void Scene::sCamera()
+{
+}
+
 void Scene::simulate(int frame)
 {
 }

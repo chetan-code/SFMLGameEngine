@@ -13,14 +13,36 @@ Scene_Play::Scene_Play(GameEngine* engine, const std::string& levelPath) :
 
 void Scene_Play::init(const std::string & levelPath)
 {
+	setupView();
+	registerInputActions();
+	m_entities = EntityManager();
+	std::cout << "Initializing play scene" << std::endl;
+	setupTestLevel();
+	spawnPlayer();
+}
+
+void Scene_Play::setupView()
+{
+	m_cameraType = CameraType::FollowX;
+	//view as same size as window
+	m_view = sf::View(sf::FloatRect(0, 0, gameEngine->getWindow().getSize().x, gameEngine->getWindow().getSize().y));
+	// set viewport - where in window the view will be drawn
+	m_view.setViewport(sf::FloatRect(0.25, 0.25, 0.5, 0.5));
+	//apply view
+	gameEngine->getWindow().setView(m_view);
+}
+
+void Scene_Play::registerInputActions()
+{
 	registerAction(sf::Keyboard::D, "RIGHT");
 	registerAction(sf::Keyboard::A, "LEFT");
 	registerAction(sf::Keyboard::Space, "JUMP");
 	registerAction(sf::Keyboard::Escape, "RESET");
 	registerAction(sf::Mouse::Button::Left + 1000, "MOUSE1");
+}
 
-	m_entities = EntityManager();
-	std::cout << "Initializing play scene" << std::endl;
+void Scene_Play::setupTestLevel()
+{
 
 	//enironment layer - test
 	for (int i = 0; i < 5; i++) {
@@ -48,14 +70,28 @@ void Scene_Play::init(const std::string & levelPath)
 	//enironment layer3 - test
 	for (int i = 0; i < 5; i++) {
 		auto e = m_entities.addEntity("tile");
-		e->addComponent<CTransform>(Vec2((11 * PIXEL_SIZE) + i * PIXEL_SIZE , (i % 2 == 0) ? 450 : 400), Vec2(0, 0), 0);
+		e->addComponent<CTransform>(Vec2((11 * PIXEL_SIZE) + i * PIXEL_SIZE, (i % 2 == 0) ? 450 : 400), Vec2(0, 0), 0);
 		e->addComponent<CBoundingBox>(Vec2(PIXEL_SIZE, PIXEL_SIZE));
 		e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(PIXEL_SIZE, 0, PIXEL_SIZE, PIXEL_SIZE));
 	}
-
-
-	spawnPlayer();
 }
+
+void Scene_Play::spawnPlayer()
+{
+	//player layer
+	m_player = m_entities.addEntity("player");
+	m_player->addComponent<CInput>();
+	m_player->addComponent<CGravity>(1.0f);
+	m_player->addComponent<CTransform>(Vec2(20, 20), Vec2(1, 0), 0);
+	m_player->addComponent<CBoundingBox>(Vec2(48, 80));
+	m_player->addComponent<CState>("player_idle");
+	//player animation
+	m_animationMap["player_idle"] = std::make_shared<Animation>("player_idle", gameEngine->getAssets().getTexture("player_idle"), 1, 1, 20);
+	m_animationMap["player_walk"] = std::make_shared<Animation>("player_walk", gameEngine->getAssets().getTexture("player_walk"), 2, 1, 10);
+	m_animationMap["player_jump"] = std::make_shared<Animation>("player_jump", gameEngine->getAssets().getTexture("player_jump"), 1, 1, 20);
+	m_player->addComponent<CAnimation>(*m_animationMap["player_idle"]);
+}
+
 
 void Scene_Play::update()
 {
@@ -63,6 +99,7 @@ void Scene_Play::update()
 	sRender();
 	sMovement();
 	sCollision();
+	sCamera();
 	checkForStateChange();
 }
 
@@ -132,6 +169,13 @@ void Scene_Play::sRender()
 	gameEngine->getWindow().display();
 }
 
+
+void Scene_Play::sCamera() {
+	if (m_cameraType == CameraType::FollowX) {
+		m_view.setCenter(sf::Vector2f(m_player->getComponent<CTransform>().pos.x, gameEngine->getWindow().getSize().y/2));
+		gameEngine->getWindow().setView(m_view);
+	}
+}
 
 
 void Scene_Play::simulate(int frame)
@@ -240,21 +284,7 @@ void Scene_Play::sCollision()
 
 }
 
-void Scene_Play::spawnPlayer()
-{
-	//player layer
-	m_player = m_entities.addEntity("player");
-	m_player->addComponent<CInput>();
-	m_player->addComponent<CGravity>(1.0f);
-	m_player->addComponent<CTransform>(Vec2(20, 20), Vec2(1, 0), 0);
-	m_player->addComponent<CBoundingBox>(Vec2(48, 80));
-	m_player->addComponent<CState>("player_idle");
-	//player animation
-	m_animationMap["player_idle"] = std::make_shared<Animation>("player_idle", gameEngine->getAssets().getTexture("player_idle"), 1, 1, 20);
-	m_animationMap["player_walk"] = std::make_shared<Animation>("player_walk", gameEngine->getAssets().getTexture("player_walk"), 2, 1, 20);
-	m_animationMap["player_jump"] = std::make_shared<Animation>("player_jump", gameEngine->getAssets().getTexture("player_jump"), 1, 1, 20);
-	m_player->addComponent<CAnimation>(*m_animationMap["player_idle"]);
-}
+
 
 void Scene_Play::spawnRandom() {
 	sf::Vector2i mousePos = sf::Mouse::getPosition(gameEngine->getWindow());
