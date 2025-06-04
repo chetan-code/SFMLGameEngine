@@ -31,6 +31,7 @@ public :
 	void spawnPlayer();
 	void playerReset();
 	void spawnRandom();
+	void checkForStateChange();
 	void changeState(std::string newState);
 };
 

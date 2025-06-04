@@ -63,6 +63,7 @@ void Scene_Play::update()
 	sRender();
 	sMovement();
 	sCollision();
+	checkForStateChange();
 }
 
 void Scene_Play::sDoAction(const Action& action)
@@ -151,7 +152,6 @@ void Scene_Play::Jump(bool start)
 		//todo : check if grounded
 		m_player->getComponent<CTransform>().velocity.y = -20;
 		m_isGrounded = false;
-		changeState("player_jump");
 		std::cout << "JUMP START" << std::endl;
 	}
 }
@@ -170,9 +170,6 @@ void Scene_Play::sMovement()
 			if (e->hasComponent<CInput>()) {
 				//movement with input
 				finalVelocity.x = e->getComponent<CInput>().axis.x;	
-				if (finalVelocity.x != 0 && finalVelocity.y == 0) {
-					changeState("player_walk");
-				}
 				if(finalVelocity.x != 0)transform.scale.x = std::copysign(1, finalVelocity.x); 
 			}
 
@@ -181,9 +178,7 @@ void Scene_Play::sMovement()
 				finalVelocity.y += e->getComponent<CGravity>().gravity;
 			}
 
-
-
-			//ground check - will be replaced by collider logic
+			//window bound check - will be replaced by collider logic
 			float groundY = gameEngine->getWindow().getSize().y - 96;
 			if (transform.pos.y >= groundY) {
 				transform.pos.y = groundY;
@@ -218,11 +213,7 @@ void Scene_Play::sCollision()
 					if(a->getComponent<CTransform>().velocity.y > 0) {
 						a->getComponent<CTransform>().pos.y -= overlap.y;
 						a->getComponent<CTransform>().velocity.y = 0;	
-						if (a == m_player && !m_isGrounded && a->getComponent<CTransform>().velocity.x == 0) { 
-							//change only when player was in air and not moving
-							changeState("player_idle"); 
-							m_isGrounded = true;
-						}
+
 					}
 					//bottom to top
 					if (a->getComponent<CTransform>().velocity.y < 0) {
@@ -236,7 +227,6 @@ void Scene_Play::sCollision()
 					if (a->getComponent<CTransform>().velocity.x >  0) {
 						a->getComponent<CTransform>().pos.x -= overlap.x;
 						a->getComponent<CTransform>().velocity.x = 0;
-
 					}
 					//right to left
 					if (a->getComponent<CTransform>().velocity.x < 0) {
@@ -274,6 +264,24 @@ void Scene_Play::spawnRandom() {
 	e->addComponent<CTransform>(Vec2(worldPos.x, worldPos.y), Vec2(0, 0), 0);
 	e->addComponent<CBoundingBox>(Vec2(PIXEL_SIZE, PIXEL_SIZE));
 	e->addComponent<CSprite>(gameEngine->getAssets().getTexture("environment"), sf::IntRect(7 * PIXEL_SIZE, 0, PIXEL_SIZE, PIXEL_SIZE));
+}
+
+//TODO : Not sure if this is the best way to do this?
+void Scene_Play::checkForStateChange()
+{
+	CTransform& pt = m_player->getComponent<CTransform>();
+	if (pt.velocity.x != 0 && pt.velocity.y == 0) {
+		changeState("player_walk");
+	}
+	if (!m_isGrounded && pt.velocity.x == 0) {
+		//change only when player was in air and not moving
+		changeState("player_idle");
+		m_isGrounded = true;
+	}
+
+	if (!m_isGrounded && pt.velocity.y < 0) {
+		changeState("player_jump");
+	}
 }
 
 void Scene_Play::changeState(std::string newState)
