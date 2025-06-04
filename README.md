@@ -2,6 +2,10 @@
 
 A modular and lightweight 2D game engine built using C++ and SFML.  
 This engine provides a solid foundation for developing 2D games, featuring an entity-component system, asset management, animation handling, and basic physics integration.
+NOTE : The engine is work in progress - code structure and architecture is bound to evolve over time.
+
+## DEMO 
+![Engine Preview](info/Platformer.gif)
 
 ---
 
