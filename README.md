@@ -7,9 +7,9 @@ NOTE : The engine is work in progress - code structure and architecture is bound
 ## DEMO 
 ![Engine Preview](info/Platformer.gif)
 
----
 
-## ✨ Features
+
+## Features
 
 - **Entity-Component System (ECS):** Flexible architecture allowing dynamic composition of game entities.
 - **Asset Management:** Efficient loading and management of textures, fonts, and other resources.
@@ -17,25 +17,8 @@ NOTE : The engine is work in progress - code structure and architecture is bound
 - **Physics Integration:** Basic physics components for movement and collision detection.
 - **Modular Design:** Clean separation of concerns, making it easy to extend and maintain.
 
----
 
-## ✨ Engine Architecture
+
+## Engine Architecture
 ![Engine Architecture](info/EngineArchitecture.png)
 
-
-## 🛠 Getting Started
-
-### Prerequisites
-
-- C++17 compatible compiler (e.g. g++, clang++)
-- [SFML 2.5+](https://www.sfml-dev.org/download.php)
-
-### Build Instructions (Manual Compilation)
-
-Compile using `g++` (Linux/macOS) or any C++ compiler with SFML linked:
-
-```bash
-g++ -std=c++17 -o SFMLGameEngine \
-Main.cpp Game.cpp GameEngine.cpp Entity.cpp EntityManager.cpp \
-Components.cpp Assets.cpp Animation.cpp Physics.cpp \
--lsfml-graphics -lsfml-window -lsfml-system
